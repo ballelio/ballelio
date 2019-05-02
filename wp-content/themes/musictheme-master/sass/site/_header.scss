@@ -1,0 +1,133 @@
+/*--------------------------------------------------------------
+## Header
+--------------------------------------------------------------*/
+.site-header {
+	color: $color__background-body;
+	position: absolute;
+	left: 0;
+	right: 0;
+	background-color: transparent;
+	z-index: 500;
+
+	.menu-open & {
+		background: $color__theme-link;
+	}
+	.menu-open &.white {
+		background: $color__background-body;
+	}
+	.menu-open &.grey {
+		background: $color__theme-secondary;
+	}
+	.menu-open &.black{
+		background: $color__theme-link;
+	}
+}
+
+.site-header-wrap {
+	display: flex;
+	max-width: $size__site-max-width-wide;
+	margin: 0 auto;
+	padding: 0 #{$size__horizontal-padding / 2 };
+
+	.main-navigation {
+		flex: 1;
+		align-self: flex-end;
+
+		.js & {
+			position: absolute;
+			visibility: hidden;
+
+			&.show-menu {
+				position: initial;
+				visibility: visible;
+			}
+		}
+	}
+}
+
+.site-branding {
+	display: flex;
+	align-items: center;
+	padding: 1em 0;
+}
+
+.custom-logo {
+	max-height: 38px;
+	width: auto;
+}
+
+.custom-logo-link {
+	display: flex;
+	align-items: center;
+	height: 2.7rem;
+
+	+ .site-branding-text {
+		padding-left: 1em;
+	}
+}
+
+.site-title {
+	font-size: 1rem;
+	font-style: italic;
+	line-height: 1.4;
+	margin: 0;
+}
+
+.site-title a {
+	color: $color__background-body;
+	.white & {
+		color: $color__theme-link;
+	}
+}
+
+.site-description {
+	line-height: 1.4;
+	margin: 0;
+
+	.white & {
+		color: $color__theme-link;
+	}
+}
+
+@media screen and (min-width: 740px) {
+
+	.custom-logo-link {
+		max-height: 46px;
+	}
+
+	.custom-logo {
+		max-height: 32px;
+	}
+
+	.site-header-wrap {
+		padding: 0 $size__horizontal-padding;
+	}
+
+}
+
+@media screen and (min-width: 740px) {
+
+	.site-header-wrap {
+		padding: 0 $size__horizontal-padding;
+	}
+}
+
+@media screen and (min-width: 37.5em) {
+
+	.site-header {
+		&.white,
+		&.grey,
+		&.black {
+			background: transparent;
+		}
+	}
+
+	.site-header {
+		.menu-open &,
+		.menu-open &.white,
+		.menu-open &.grey,
+		.menu-open &.black {
+			background: transparent;
+		}
+	}
+}
