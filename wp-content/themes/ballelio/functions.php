@@ -132,11 +132,11 @@ function ballelio_fonts_url() {
         $font_families = array();
         
 	if ( 'off' !== $fira_sans ) {      
-            $font_families[] = 'Fira Sans:400,400i,700';
+            $font_families[] = 'Fira Sans:400,400i,500,700,800';
         }
         
         if ( 'off' !== $lora ) {      
-            $font_families[] = 'Lora:400,400i,500,700';
+            $font_families[] = 'Lora:400,400i,500,700,';
         }
         
         if ( in_array( 'on', array($lora, $fira_sans) )  ) {
@@ -162,8 +162,8 @@ function ballelio_scripts() {
       /// fonts from google///
     wp_enqueue_style( 'ballelio-fonts', ballelio_fonts_url() );
 	wp_enqueue_script( 'ballelio-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20151215', true );
-
 	wp_enqueue_script( 'ballelio-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20151215', true );
+    wp_enqueue_script( 'ballelio-functions', get_template_directory_uri() . '/js/functions.js', array('jquery'), '20190506', true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );

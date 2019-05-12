@@ -26,10 +26,8 @@
 				printf( esc_html__( 'in _s.', '' ), 'ballelio', '<a href="http://underscores.me/">Underscores.me</a>' );
 				?>
 		</div><!-- .site-info -->
-	</footer><!-- #colophon -->
-</div><!-- #page -->
-
- <!-- footer menu - social-media    /*class="site-footer-wrap"*/-->
+        
+         <!-- footer menu - social-media   -->
                      <div id="social-media" class="menu-social-media-container" >
                          <?php
 			wp_nav_menu( array(
@@ -37,6 +35,12 @@
 				'menu_id'        => 'social'
 			) );
 			?></div>
+        
+        
+	</footer><!-- #colophon -->
+</div><!-- #page -->
+
+
 
 <?php wp_footer(); ?>
 

@@ -60,16 +60,14 @@ get_header(); ?>
             </aside>
             </article>
             
-              
-            
 			<?php endwhile; // End of the loop.
 			?>
 
             <?php
 		while ( have_posts() ) : the_post();
 			the_post_navigation( array(
-				'prev_text' => '%title <span class="meta-nav" aria-hidden="true">' . esc_html__( 'Previous', 'ballelio' ) . '</span>',
-				'next_text' => '%title <span class="meta-nav" aria-hidden="true">' . esc_html__( 'Next', 'ballelio' ) . '</span>'
+				'prev_text' => '  %title </br><i class="fas fa-arrow-circle-left"></i> <span class="meta-nav" aria-hidden="true">' . esc_html__( '', 'ballelio'  ) . '</span>',
+				'next_text' => '%title  </br><i class="fas fa-arrow-circle-right"></i><span class="meta-nav" aria-hidden="true">' . esc_html__( '  ', 'ballelio' ) . '</span>'
 			) );
 
 		endwhile; // End of the loop.
