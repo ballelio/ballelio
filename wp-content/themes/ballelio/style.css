@@ -999,7 +999,7 @@ p.site-description{
     
     div.site-branding{
         margin-left: 2em;
-        width: 40%;
+        width: 50%;
     }    
     
     .site-header{
@@ -1008,7 +1008,12 @@ p.site-description{
     }
 }
 
-
+@media screen and (min-width: 922px){
+    
+    div.site-branding{
+        width: 60%;
+    }    
+}
 /*--------------------------------------------------------------
 # Main Content
 --------------------------------------------------------------
@@ -1033,15 +1038,21 @@ div.entry-content{
     font-size: 1.10rem;
 }
 
-.vp-portfolio__item-meta-title{
+.vp-portfolio__item-meta-title a{
     margin-top: 1em;
+    border-bottom: solid 2px #dd4f4f;
 }
 
 .vp-portfolio__items-style-default .vp-portfolio__item-meta-excerpt{
     font-family: "Lora", "Georgia", Georgia, "Times New Roman", Times, serif;
      margin-top: .5em;
      font-size: .9rem;
-    opacity: .75;
+    opacity: .75;     
+}
+
+div.entry-content a {
+    border-bottom: solid 2px #dd4f4f;
+    color: #000;
 }
 
 /*Front page images for small screens*/
@@ -1072,6 +1083,21 @@ div.entry-content{
 }
 }
 
+@media screen and (min-width: 922px){
+    
+     div#primary.content-area{
+        padding:  1em 5em;
+    }   
+}
+
+@media screen and (min-width: 1280px){
+     
+    main#main.site-main{
+	max-width: 1280px;
+        margin: 0 auto;
+        padding: inherit;
+    }
+}
 /*--------------------------------------------------------------
 Portfolio-Page
 /*--------------------------------------------------------------*/
@@ -1088,24 +1114,40 @@ p.project-description{
     font-weight: 400;
     font-size: 1.05em;
     opacity: .75;
+     border-top: #ccc solid 1px;
+    padding-top: 1em;
+    width: 100%;
 }
 
 p.languages-used{
-    font-size: 2em;
-    margin-bottom: 1em;
+    font-size: 2.5em;
+    line-height: 1;
+    margin-bottom: .5em;
     opacity: .75;
+     border-top: #ccc solid 1px;
+    padding-top: .5em;
+    width: 100%;
+}
+
+p.project-link{
+    border-top: #ccc solid 1px;
+    padding: 2em 0;
+    width: 100%;
+    border-bottom: #ccc solid 1px;
 }
 
 p.project-link a{
     font-family: "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-weight: 700;
-    font-size: 1.5em;
-    color: #000;
-    border-bottom: solid 1px #dd4f4f;
+    font-size: 1.25em;
+    color: #555;
+    border-bottom: solid 2px #dd4f4f;
+    
 }
 
 p.project-link a:visited{
     color: #000;
+
 }
 
 div.project-image{
@@ -1124,9 +1166,7 @@ img.attachment-medium.size-medium{
 
 nav.navigation.post-navigation{
         clear: both;
-        border-bottom: solid 1px #ccc;
-        border-top: solid 1px #ccc;
-        margin: 2em 0;
+        margin: 1em 0;
         padding: 1em 0;
     }
     
@@ -1144,14 +1184,23 @@ nav.navigation.post-navigation{
     }
     
     h1.portfolio{
-     font-size: 3rem;
+    font-size: 3rem;
     line-height: 1.25;
     margin: 30px 0;
 }
+    
+    p.project-description{
+    margin-top: .5em;
+}
+    
     div.project-image{
     margin:0 0 .5em 0;
 }
 
+    p.project-link{
+    padding-bottom: 2em;
+}
+    
     img.attachment-medium.size-medium{
     margin: .5em 0;
     padding: 0;
@@ -1169,14 +1218,39 @@ nav.navigation.post-navigation{
         float: right;
     }
 
-    
-    
-    
+    nav.navigation.post-navigation{
+       border-top: solid 1px #ccc;
+        margin: .25em 0 0 0;
+        padding: .5em 0 0 0;
+    }    
 }
 
+@media screen and (min-width: 1280px){
 
+    aside.secondary-images{
+        width: 60%;
+        display: flex;
+        flex-wrap: wrap;
+        height: 100%;
+        padding: 0;
+        margin-bottom: 5em;
+    }
+    
+    img.attachment-medium.size-medium{
+    margin:0 1em 1em 0;
+    width: 47%;       
+}
+    
+    aside.project{
+        width: 40%;
+         margin-bottom: 5em;
+    }
+    p.project-description{
+        margin-top: 0;
+    }
+}
 /*--------------------------------------------------------------
-# Footer
+# Footer 
 --------------------------------------------------------------*/
 /*--------------------------------------------------------------*/
 /* !## Site Footer */
@@ -1189,8 +1263,7 @@ footer#colophon.site-footer{
     }
 
 .site-footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.2);
-  bottom: 1em;
+  border-top: 1px solid #dd4f4f;
   font-size:.8em;
     font-weight: 500;
   padding: 2em 2em 0 2em;
@@ -1204,21 +1277,21 @@ footer#colophon.site-footer{
 .site-info {
   clear: both;
   float: none;
-  padding: 0 .5em;
+  padding: .5em .5em 0 .5em;
   text-align:center;
   width: 100%;
 }
 
-@media screen and (max-width: 320px) {
-    
-    footer#colophon.site-footer{
-    padding: 1em;   
-    }
-    
-    .site-info{
-        padding: 0 3em;
-    }    
-}
+                        @media screen and (max-width: 320px) {
+
+                            footer#colophon.site-footer{
+                            padding: 1em;   
+                            }
+
+                            .site-info{
+                                padding: 0.5em 3em 0 3em;
+                            }    
+                        }
 
 #social-media.menu-social-media-container{
     margin:0;
@@ -1230,7 +1303,7 @@ footer#colophon.site-footer{
     display: inline;
     width:50%;
     font-size:1em;
-    margin:0 auto;     
+
 }
 
 #social-media ul{
@@ -1239,7 +1312,6 @@ footer#colophon.site-footer{
         justify-content:space-between;
         padding-right: 1em;
         padding-left: 1em;
-        align-items:baseline;
         height: 100%;
         }
 
@@ -1264,7 +1336,7 @@ margin-bottom: 0;
 footer#colophon.site-footer{
     display: flex;
     height: 100%;
-    padding: 2em;   
+    padding: 2.5em 2em;   
     }
     
 div.site-info {
@@ -1296,9 +1368,7 @@ div#social-media.menu-social-media-container{
 #social-media li{
     padding-left: 1em;
     }
-    
-ul#social.menu{  
-    }  
+
     
 }
 
