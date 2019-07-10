@@ -116,6 +116,10 @@ class Visual_Portfolio_Admin {
 
             wp_enqueue_script( 'conditionize', visual_portfolio()->plugin_url . 'assets/vendor/conditionize/conditionize.min.js', array( 'jquery' ), '1.0.1', true );
 
+            wp_enqueue_script( 'popper.js', visual_portfolio()->plugin_url . 'assets/vendor/popper.js/popper.min.js', '', '1.14.3', true );
+            wp_enqueue_script( 'tooltip.js', visual_portfolio()->plugin_url . 'assets/vendor/popper.js/tooltip.min.js', array( 'popper.js' ), '1.14.3', true );
+            wp_enqueue_style( 'popper.js', visual_portfolio()->plugin_url . 'assets/vendor/popper.js/popper.css', '', '1.14.3' );
+
             $codemirror_version = '5.45.0';
             wp_enqueue_script( 'codemirror', visual_portfolio()->plugin_url . 'assets/vendor/codemirror/codemirror.js', '', $codemirror_version, true );
             wp_enqueue_script( 'codemirror-mode-css', visual_portfolio()->plugin_url . 'assets/vendor/codemirror/mode/css/css.js', '', $codemirror_version, true );
@@ -147,14 +151,14 @@ class Visual_Portfolio_Admin {
             wp_enqueue_style( 'codemirror-addon-dialog', visual_portfolio()->plugin_url . 'assets/vendor/codemirror/addon/dialog/dialog.css', '', $codemirror_version );
             wp_enqueue_style( 'codemirror-addon-matchesonscrollbar', visual_portfolio()->plugin_url . 'assets/vendor/codemirror/addon/search/matchesonscrollbar.css', '', $codemirror_version );
             wp_enqueue_style( 'codemirror-theme-eclipse', visual_portfolio()->plugin_url . 'assets/vendor/codemirror/theme/eclipse.css', '', $codemirror_version );
+
+            wp_enqueue_script( 'visual-portfolio-layout-admin', visual_portfolio()->plugin_url . 'assets/admin/js/layouts-editor.min.js', array( 'jquery' ), '1.12.1', true );
+            wp_enqueue_style( 'visual-portfolio-layout-admin', visual_portfolio()->plugin_url . 'assets/admin/css/layouts-editor.min.css', '', '1.12.1' );
+            wp_localize_script( 'visual-portfolio-layout-admin', 'VPAdminVariables', $data_init );
         }
 
-        wp_enqueue_script( 'popper.js', visual_portfolio()->plugin_url . 'assets/vendor/popper.js/popper.min.js', '', '1.14.3', true );
-        wp_enqueue_script( 'tooltip.js', visual_portfolio()->plugin_url . 'assets/vendor/popper.js/tooltip.min.js', array( 'popper.js' ), '1.14.3', true );
-        wp_enqueue_style( 'popper.js', visual_portfolio()->plugin_url . 'assets/vendor/popper.js/popper.css', '', '1.14.3' );
-
-        wp_enqueue_script( 'visual-portfolio-admin', visual_portfolio()->plugin_url . 'assets/admin/js/script.min.js', array( 'jquery' ), '1.11.0', true );
-        wp_enqueue_style( 'visual-portfolio-admin', visual_portfolio()->plugin_url . 'assets/admin/css/style.min.css', '', '1.11.0' );
+        wp_enqueue_script( 'visual-portfolio-admin', visual_portfolio()->plugin_url . 'assets/admin/js/script.min.js', array( 'jquery' ), '1.12.1', true );
+        wp_enqueue_style( 'visual-portfolio-admin', visual_portfolio()->plugin_url . 'assets/admin/css/style.min.css', '', '1.12.1' );
         wp_localize_script( 'visual-portfolio-admin', 'VPAdminVariables', $data_init );
     }
 
@@ -268,12 +272,8 @@ class Visual_Portfolio_Admin {
                 'show_in_nav_menus' => false,
                 'show_in_rest' => true,
                 'show_admin_column' => true,
-                'capabilities'          => array(
-                    'manage_terms' => 'manage_portfolio_terms',
-                    'edit_terms'   => 'edit_portfolio_terms',
-                    'delete_terms' => 'delete_portfolio_terms',
-                    'assign_terms' => 'assign_portfolio_terms',
-                ),
+                'map_meta_cap' => true,
+                'capability_type' => 'portfolio',
             )
         );
         register_taxonomy(
@@ -290,12 +290,8 @@ class Visual_Portfolio_Admin {
                 'show_in_nav_menus' => false,
                 'show_in_rest' => true,
                 'show_admin_column' => true,
-                'capabilities'          => array(
-                    'manage_terms' => 'manage_portfolio_terms',
-                    'edit_terms'   => 'edit_portfolio_terms',
-                    'delete_terms' => 'delete_portfolio_terms',
-                    'assign_terms' => 'assign_portfolio_terms',
-                ),
+                'map_meta_cap' => true,
+                'capability_type' => 'portfolio',
             )
         );
 
@@ -498,7 +494,7 @@ class Visual_Portfolio_Admin {
         if ( ! is_blog_installed() ) {
             return;
         }
-        if ( get_option( 'visual_portfolio_updated_caps' ) === '1.11.0' ) {
+        if ( get_option( 'visual_portfolio_updated_caps' ) === '1.12.1' ) {
             return;
         }
 
@@ -574,7 +570,7 @@ class Visual_Portfolio_Admin {
             $wp_roles->add_cap( 'administrator', $cap );
         }
 
-        update_option( 'visual_portfolio_updated_caps', '1.11.0' );
+        update_option( 'visual_portfolio_updated_caps', '1.12.1' );
     }
 
     /**
@@ -658,16 +654,6 @@ class Visual_Portfolio_Admin {
             echo '<a href="' . esc_url( get_edit_post_link() ) . '" class="vp-portfolio__thumbnail">';
             if ( has_post_thumbnail() ) {
                 the_post_thumbnail( 'thumbnail' );
-            } else if ( has_post_format( 'video' ) ) {
-                $video_url = get_post_meta( get_the_ID(), 'video_url', true );
-                if ( $video_url ) {
-                    $oembed = visual_portfolio()->get_oembed_data( $video_url );
-                    if ( isset( $oembed['thumbnail_url'] ) ) {
-                        ?>
-                        <img src="<?php echo esc_url( $oembed['thumbnail_url'] ); ?>" alt="" />
-                        <?php
-                    }
-                }
             }
             echo '</a>';
         }

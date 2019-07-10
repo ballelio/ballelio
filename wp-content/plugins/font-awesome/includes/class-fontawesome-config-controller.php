@@ -83,7 +83,9 @@ if ( ! class_exists( 'FortAwesome\FontAwesome_Config_Controller' ) ) :
 			$locked_load_spec = isset( $options['lockedLoadSpec'] ) ? $options['lockedLoadSpec'] : false;
 
 			/**
-			 * Calling wp_head() is required to trigger the 'wp_enqueue_scripts' action and detection of unregistered clients.
+			 * Calling wp_enqueue_scripts() is required to trigger the 'wp_enqueue_scripts' action that is the
+			 * conventional time in the WordPress lifecycle when plugins or themes would enqueue scripts or styles.
+			 * We also have to explicitly run the detection function.
 			 * Note that this can only possibly detect those clients who enqueue their styles or scripts within the context
 			 * of the controller action that invokes this function.
 			 * It's possible than some unregistered client enqueues a style or script in some other circumstance. We
@@ -96,7 +98,8 @@ if ( ! class_exists( 'FortAwesome\FontAwesome_Config_Controller' ) ) :
 			 * which is detected on the same page load for which FontAwesome::unregistered_clients() is queried.
 			 */
 			ob_start();
-			wp_head();
+			wp_enqueue_scripts();
+			$fa->detect_unregistered_clients();
 			ob_end_clean();
 
 			return array(
@@ -134,8 +137,9 @@ if ( ! class_exists( 'FortAwesome\FontAwesome_Config_Controller' ) ) :
 			// Ideally, we'd be able to detect which plugin results in such an error by catching it and then
 			// reporting to the client which plugin caused the error. But at a minimum, we need to make sure
 			// that we return 500 instead of 200 in these cases.
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
+			// phpcs:disable
 			ini_set( 'display_errors', 0 );
+			// phpcs:enable
 
 			try {
 				$fa = fa();
@@ -167,8 +171,9 @@ if ( ! class_exists( 'FortAwesome\FontAwesome_Config_Controller' ) ) :
 		 * @return WP_Error|WP_REST_Response
 		 */
 		public function update_item( $request ) {
-			// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_ini_set
+			// phpcs:disable
 			ini_set( 'display_errors', 0 );
+			// phpcs:enable
 
 			try {
 				$item = $this->prepare_item_for_database( $request );

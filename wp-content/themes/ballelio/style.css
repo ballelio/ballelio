@@ -603,6 +603,7 @@ textarea {
     
     nav#site-navigation.main-navigation{     
         justify-content: center;
+        padding-right: 2em;
     }   
     
 }
@@ -1050,6 +1051,10 @@ div.entry-content{
     opacity: .75;     
 }
 
+div.vp-portfolio__item .vp-portfolio__item-img img,  .vp-portfolio__item .vp-portfolio__item-img a, .vp-portfolio__item .vp-portfolio__thumbnail-img img{
+    border: none;
+}
+
 div.entry-content a {
     border-bottom: solid 2px #dd4f4f;
     color: #000;
@@ -1074,12 +1079,20 @@ div.entry-content a {
     div.entry-content{
     font-size: 1.20rem;
 }
+    
+    #post-701 div.entry-content p {
+  width: 80%;  
+}
+    
     .vp-portfolio.vp-uid-092d79bd.vp-portfolio__ready{
     margin-left: 0;
     margin-right: 0;
 }
     .vp-portfolio__items-style-default .vp-portfolio__item-meta-excerpt{
      font-size: 1rem;
+}
+     div.vp-portfolio__item .vp-portfolio__item-img img,  .vp-portfolio__item .vp-portfolio__item-img a, .vp-portfolio__item .vp-portfolio__thumbnail-img img{
+    border: solid 1px #dd4f4f;
 }
 }
 
@@ -1088,6 +1101,7 @@ div.entry-content a {
      div#primary.content-area{
         padding:  1em 5em;
     }   
+    
 }
 
 @media screen and (min-width: 1280px){
@@ -1120,7 +1134,8 @@ p.project-description{
 }
 
 p.languages-used{
-    font-size: 2.5em;
+    font-size: 2em;
+    text-align: center;
     line-height: 1;
     margin-bottom: .5em;
     opacity: .75;
@@ -1137,31 +1152,36 @@ p.project-link{
 }
 
 p.project-link a{
-    font-family: "Fira Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #000;
     font-weight: 700;
-    font-size: 1.25em;
-    color: #555;
+    font-size: 1.1em;
     border-bottom: solid 2px #dd4f4f;
     
 }
 
 p.project-link a:visited{
     color: #000;
-
 }
-
+aside.secondary-images{
+        display: flex;
+         flex-wrap: wrap;
+        height: 100%;
+        padding: 0;
+        justify-content: center;
+    }
 div.project-image{
     margin:1em -1em;
 }
 
 img.attachment-medium.size-medium{
     margin-bottom: 1em;
-    padding: 0 .2em;
+    border: solid 1px #ccc;
 }
 
 .vp-id-1867 .vp-portfolio__items-style-default .vp-portfolio__item-meta-title a:hover {
     color: inherit;
   border-bottom: solid 2px #dd4f4f;
+  
 }
 
 nav.navigation.post-navigation{
@@ -1175,6 +1195,30 @@ nav.navigation.post-navigation{
         font-size: 1.25em;
         opacity: .6;
     }
+/*--------------------------------------------------------------
+Contact-Page
+/*--------------------------------------------------------------*/
+
+.wpcf7 input[type="text"],
+.wpcf7 input[type="email"],
+.wpcf7 textarea
+{   border-radius: 0;
+    border:none;
+    border-bottom: solid 3px #dd4f4f;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.wpcf7-form-control.wpcf7-submit{
+    background-color: #fff;;
+    border: solid 3px #dd4f4f;
+    border-radius: 0;
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    padding: 15px 30px;
+    width: 100%;
+    }
+
 
 
 @media screen and (min-width: 576px){
@@ -1192,7 +1236,10 @@ nav.navigation.post-navigation{
     p.project-description{
     margin-top: .5em;
 }
-    
+    p.languages-used{
+    text-align: left;
+    }
+        
     div.project-image{
     margin:0 0 .5em 0;
 }
@@ -1201,7 +1248,7 @@ nav.navigation.post-navigation{
     padding-bottom: 2em;
 }
     
-    img.attachment-medium.size-medium{
+  img.attachment-medium.size-medium{
     margin: .5em 0;
     padding: 0;
 }
@@ -1211,7 +1258,9 @@ nav.navigation.post-navigation{
         display: block;
         float: left;
         margin-bottom: 1em;
+       text-align: right;
     }
+    
     aside.project{
         width: 50%;
         display: block;
@@ -1223,32 +1272,91 @@ nav.navigation.post-navigation{
         margin: .25em 0 0 0;
         padding: .5em 0 0 0;
     }    
+    
+
+
+    /*--------------------------------------------------------------
+Contact-Page
+/*--------------------------------------------------------------*/
+
+.wpcf7 input[type="text"],
+.wpcf7 input[type="email"],
+.wpcf7 textarea
+{ width: 65%;
+}
+
+.wpcf7-form-control.wpcf7-submit{
+    width: 30%;
+    }
+#post-1820 p{
+        width: 90%;
+    }  
+    
+/*--------------------------------------------------------------
+About-Page
+/*--------------------------------------------------------------*/
+    
+    div.entry-conent{
+        display: flex;
+        align-items: flex-start;
+    }
+    figure.wp-block-image{
+        width: 35%;
+        float: left;
+        margin-right: 2em;
+    }
+    
+    h3.bio{
+        width:40% ;
+        float: none;
+        margin-bottom: 0;
+    }
+    
+    .bio{
+        width: 55%;
+        float: left;
+        margin-top: 15px;
+    }
+    
 }
 
 @media screen and (min-width: 1280px){
 
-    aside.secondary-images{
-        width: 60%;
-        display: flex;
-        flex-wrap: wrap;
-        height: 100%;
-        padding: 0;
-        margin-bottom: 5em;
-    }
-    
     img.attachment-medium.size-medium{
     margin:0 1em 1em 0;
-    width: 47%;       
+    width: auto;       
 }
-    
+      
     aside.project{
-        width: 40%;
-         margin-bottom: 5em;
+        width: 45%;
+        display: block;
+        float: left;
     }
+ 
     p.project-description{
         margin-top: 0;
     }
+
+/*--------------------------------------------------------------
+Contact-Page
+/*--------------------------------------------------------------*/
+
+.wpcf7 input[type="text"],
+.wpcf7 input[type="email"],
+.wpcf7 textarea
+{ width: 50%;
 }
+.wpcf7-form-control.wpcf7-submit{
+    width: 15%;
+    }
+    
+    #post-1820 p{
+        width: 65%;
+    }    
+
+}
+
+
 /*--------------------------------------------------------------
 # Footer 
 --------------------------------------------------------------*/
@@ -1266,7 +1374,7 @@ footer#colophon.site-footer{
   border-top: 1px solid #dd4f4f;
   font-size:.8em;
     font-weight: 500;
-  padding: 2em 2em 0 2em;
+  padding: 2em 0;
   clear: both;
   position: relative;
   width: 100%;
@@ -1337,6 +1445,7 @@ footer#colophon.site-footer{
     display: flex;
     height: 100%;
     padding: 2.5em 2em;   
+        
     }
     
 div.site-info {
@@ -1352,6 +1461,8 @@ div#social-media.menu-social-media-container{
     
     div.menu-social-container{
         margin: 0;
+        display: grid;
+       justify-content: right;
     }
     
 
@@ -1359,17 +1470,18 @@ div#social-media.menu-social-media-container{
     font-size:1.05em; 
 }
     
-#social-media ul{
+ul#social-media{
         list-style:none;
-        display:flex;
-        justify-content:end;
+
         }
     
 #social-media li{
-    padding-left: 1em;
-    }
+    padding-left: 2em;
+    vertical-align: baseline;
+    }    
 
-    
+
+
 }
 
 

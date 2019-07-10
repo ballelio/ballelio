@@ -100,7 +100,7 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 		/**
 		 * The version of this WordPress plugin.
 		 */
-		const PLUGIN_VERSION = '4.0.0-rc9';
+		const PLUGIN_VERSION = '4.0.0-rc12';
 		/**
 		 * The version of this plugin's REST API.
 		 *
@@ -132,6 +132,14 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 		 * @since 4.0.0
 		 */
 		const RESOURCE_HANDLE_V4SHIM = 'font-awesome-official-v4shim';
+
+		/**
+		 * The base name of the handle used for enqueuing this plugin's admin assets, those required for running
+		 * the admin settings page.
+		 *
+		 * @since 4.0.0
+		 */
+		const ADMIN_RESOURCE_HANDLE = self::RESOURCE_HANDLE . '-admin';
 
 		// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 		/**
@@ -224,6 +232,15 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 		 */
 		private function __construct() {
 			/* noop */
+		}
+
+		/**
+		 * Returns this plugin's admin page's screen_id. Only valid after the admin_menu hook has run.
+		 *
+		 * @since 4.0.0
+		 */
+		public function admin_screen_id() {
+			return $this->screen_id;
 		}
 
 		/**
@@ -537,11 +554,13 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 			<?php
 		}
 
-		// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 		/**
+		 * This function is not part of this plugin's public API.
+		 *
 		 * @ignore
+		 * @internal
 		 */
-		private function initialize_admin() {
+		public function initialize_admin() {
 			$v3deprecation_warning_data = $this->get_v3deprecation_warning_data();
 
 			if ( $v3deprecation_warning_data && ! ( isset( $v3deprecation_warning_data['snooze'] ) && $v3deprecation_warning_data['snooze'] ) ) {
@@ -572,7 +591,7 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 						$added_wpr_object = false;
 						foreach ( $admin_asset_manifest as $key => $value ) {
 							if ( preg_match( '/\.js$/', $key ) ) {
-								$script_name = self::PLUGIN_NAME . '-' . $script_number;
+								$script_name = self::ADMIN_RESOURCE_HANDLE . '-' . $script_number;
 								// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
 								wp_enqueue_script( $script_name, $asset_url_base . $value, [], null, true );
 
@@ -594,8 +613,12 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 							}
 							if ( preg_match( '/\.css$/', $key ) ) {
 								// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-								wp_enqueue_style( self::PLUGIN_NAME . '-' . $script_number, $asset_url_base . $value, [], null, 'all' );
+								wp_enqueue_style( self::ADMIN_RESOURCE_HANDLE . '-' . $script_number, $asset_url_base . $value, [], null, 'all' );
 							}
+							/**
+							 * This will increment even when there's not a match, so the sequence might be 1, 3, 5,
+							 * instead of 1, 2, 3. That's fine--this is just for uniqueification.
+							 */
 							$script_number++;
 						}
 					}
@@ -1344,13 +1367,15 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 
 			if ( 'webfont' === $load_spec['method'] ) {
 
-				add_action(
-					'wp_enqueue_scripts',
-					function () use ( $resource_collection ) {
-					// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-						wp_enqueue_style( self::RESOURCE_HANDLE, $resource_collection[0]->source(), null, null );
-					}
-				);
+				foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+					add_action(
+						$action,
+						function () use ( $resource_collection ) {
+							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+							wp_enqueue_style( self::RESOURCE_HANDLE, $resource_collection[0]->source(), null, null );
+						}
+					);
+				}
 
 				// Filter the <link> tag to add the integrity and crossorigin attributes for completeness.
 				add_filter(
@@ -1374,17 +1399,18 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 
 				if ( $load_spec['v4shim'] ) {
 					/**
-					 * Enqueue v4 compatibility as late as possible, though still within the normal wp_enqueue_scripts hook.
+					 * Enqueue v4 compatibility as late as possible, though still within the normal script enqueue hooks.
 					 * We need the @font-face override, especially to appear after any unregistered loads of Font Awesome
 					 * that may try to declare a @font-face with a font-family of "FontAwesome".
 					 */
-					add_action(
-						'wp_enqueue_scripts',
-						function () use ( $resource_collection, $options, $license_subdomain, $version ) {
-						// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-							wp_enqueue_style( self::RESOURCE_HANDLE_V4SHIM, $resource_collection[1]->source(), null, null );
+					foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+						add_action(
+							$action,
+							function () use ( $resource_collection, $options, $license_subdomain, $version ) {
+								// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+								wp_enqueue_style( self::RESOURCE_HANDLE_V4SHIM, $resource_collection[1]->source(), null, null );
 
-							$font_face = <<< EOT
+								$font_face = <<< EOT
 @font-face {
     font-family: "FontAwesome";
     src: url("https://${license_subdomain}.fontawesome.com/releases/v${version}/webfonts/fa-brands-400.eot"),
@@ -1417,14 +1443,15 @@ if ( ! class_exists( 'FortAwesome\FontAwesome' ) ) :
 }
 EOT;
 
-							wp_add_inline_style(
-								self::RESOURCE_HANDLE_V4SHIM,
-								$font_face
-							);
+								wp_add_inline_style(
+									self::RESOURCE_HANDLE_V4SHIM,
+									$font_face
+								);
 
-						},
-						PHP_INT_MAX
-					);
+							},
+							PHP_INT_MAX
+						);
+					}
 
 					// Filter the <link> tag to add the integrity and crossorigin attributes for completeness.
 					// Not all resources have an integrity_key for all versions of Font Awesome, so we'll skip this for those
@@ -1451,17 +1478,19 @@ EOT;
 					}
 				}
 			} else {
-				add_action(
-					'wp_enqueue_scripts',
-					function () use ( $resource_collection, $load_spec ) {
-					// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-						wp_enqueue_script( self::RESOURCE_HANDLE, $resource_collection[0]->source(), null, null, false );
+				foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+					add_action(
+						$action,
+						function () use ( $resource_collection, $load_spec ) {
+							// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+							wp_enqueue_script( self::RESOURCE_HANDLE, $resource_collection[0]->source(), null, null, false );
 
-						if ( $load_spec['pseudoElements'] ) {
-							wp_add_inline_script( self::RESOURCE_HANDLE, 'FontAwesomeConfig = { searchPseudoElements: true };', 'before' );
+							if ( $load_spec['pseudoElements'] ) {
+								wp_add_inline_script( self::RESOURCE_HANDLE, 'FontAwesomeConfig = { searchPseudoElements: true };', 'before' );
+							}
 						}
-					}
-				);
+					);
+				}
 
 				// Filter the <script> tag to add additional attributes for integrity, crossorigin, defer.
 				add_filter(
@@ -1490,13 +1519,15 @@ EOT;
 				);
 
 				if ( $load_spec['v4shim'] ) {
-					add_action(
-						'wp_enqueue_scripts',
-						function () use ( $resource_collection ) {
-						// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
-							wp_enqueue_script( self::RESOURCE_HANDLE_V4SHIM, $resource_collection[1]->source(), null, null, false );
-						}
-					);
+					foreach ( [ 'wp_enqueue_scripts', 'admin_enqueue_scripts', 'login_enqueue_scripts' ] as $action ) {
+						add_action(
+							$action,
+							function () use ( $resource_collection ) {
+								// phpcs:ignore WordPress.WP.EnqueuedResourceParameters
+								wp_enqueue_script( self::RESOURCE_HANDLE_V4SHIM, $resource_collection[1]->source(), null, null, false );
+							}
+						);
+					}
 
 					add_filter(
 						'script_loader_tag',
@@ -1527,28 +1558,34 @@ EOT;
 			$obj = $this;
 			/**
 			 * We need to detect unregistered clients *after* they would have been enqueued, if they used
-			 * the recommended mechanism of wp_enqueue_style and wp_enqueue_script.
-			 * The wp_print_styles action hook is fired after the wp_enqueue_scripts hook.
+			 * the recommended mechanism of wp_enqueue_style and wp_enqueue_script (or the admin equivalents).
+			 * The wp_print_styles action hook is fired after the wp_enqueue_scripts hook
+			 * (admin_print_styles after admin_enqueue_scripts).
 			 * We'll use priority 0 in an effort to be as early as possible, to prevent any unregistered client
 			 * from actually being printed to the head.
 			 */
-			add_action(
-				'wp_print_styles',
-				function() use ( $obj, $options ) {
-					$obj->detect_unregistered_clients();
-					if ( $options['removeUnregisteredClients'] ) {
-						$obj->remove_unregistered_clients();
-					}
-				},
-				0
-			);
+			foreach ( [ 'wp_print_styles', 'admin_print_styles', 'login_head' ] as $action ) {
+				add_action(
+					$action,
+					function() use ( $obj, $options ) {
+						$obj->detect_unregistered_clients();
+						if ( $options['removeUnregisteredClients'] ) {
+							$obj->remove_unregistered_clients();
+						}
+					},
+					0
+				);
+			}
 		}
 
-		// phpcs:ignore Generic.Commenting.DocComment.MissingShort
 		/**
+		 * Detects unregistered clients, which can be retrieved with {@see FontAwesome::unregistered_clients()}.
+		 * For internal use only. Not part of this plugin's public API.
+		 *
+		 * @internal
 		 * @ignore
 		 */
-		protected function detect_unregistered_clients() {
+		public function detect_unregistered_clients() {
 			$wp_styles  = wp_styles();
 			$wp_scripts = wp_scripts();
 
@@ -1561,21 +1598,19 @@ EOT;
 
 			foreach ( $collections as $key => $collection ) {
 				foreach ( $collection->registered as $handle => $details ) {
-					switch ( $handle ) {
-						case self::RESOURCE_HANDLE:
-						case self::RESOURCE_HANDLE_V4SHIM:
-							break;
-						default:
-							if ( strpos( $details->src, 'fontawesome' ) || strpos( $details->src, 'font-awesome' ) ) {
-								array_push(
-									$this->unregistered_clients,
-									array(
-										'handle' => $handle,
-										'type'   => $key,
-										'src'    => $details->src,
-									)
-								);
-							}
+					if ( preg_match( '/' . self::RESOURCE_HANDLE . '/', $handle )
+						|| preg_match( '/' . self::RESOURCE_HANDLE . '/', $handle ) ) {
+						continue;
+					}
+					if ( strpos( $details->src, 'fontawesome' ) || strpos( $details->src, 'font-awesome' ) ) {
+						array_push(
+							$this->unregistered_clients,
+							array(
+								'handle' => $handle,
+								'type'   => $key,
+								'src'    => $details->src,
+							)
+						);
 					}
 				}
 			}

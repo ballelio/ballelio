@@ -5,7 +5,7 @@
 * Requires at least: 4.0.0
 * Tested up to: 5.2
 * Requires PHP: 5.4
-* Stable tag: 1.11.0
+* Stable tag: 1.12.1
 * License: GPLv2 or later
 * License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,6 +121,28 @@ The manual installation method involves downloading our Visual Portfolio plugin 
 [https://visualportfolio.co/documentation/developers/jquery-methods/](https://visualportfolio.co/documentation/developers/jquery-methods/)
 
 ## Changelog ##
+
+= 1.12.1 =
+
+* fixed Vimeo and other vendors video popup loading
+* fixed Tiles sometimes wrong position calculation (for example in `2|2,1|1,1|1,1|`)
+* fixed overlay position bug in default theme in Fade and Fly effects
+
+= 1.12.0 =
+
+* changed video oembed loading method
+    * no more php oembed since it may be too heavy to load pages (used JS instead)
+    * no more video thumbnail loading if no featured image specified in post
+* fixed portfolio categories and tags capabilities
+* fixed &lt;a&gt; tag in fly and fade effect when all meta disabled
+
+= 1.11.1 =
+
+* fixed FireFox image blinking in Fade effect
+* fixed name of sorting by date items ('newest' is actually 'oldest')
+* fixed conflict with elementor carousel event
+* fixed conflict with SG Optimizer (remove noscript tag)
+* fixed w3 validation errors (figcaption tag may only be a child of figure tag)
 
 = 1.11.0 =
 

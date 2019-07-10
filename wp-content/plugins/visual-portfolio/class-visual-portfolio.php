@@ -2,7 +2,7 @@
 /**
  * Plugin Name:  Visual Portfolio
  * Description:  Portfolio post type with visual editor
- * Version:      1.11.0
+ * Version:      1.12.1
  * Author:       nK
  * Author URI:   https://nkdev.info
  * License:      GPLv2 or later
@@ -210,9 +210,9 @@ class Visual_Portfolio {
         }
 
         // Visual Portfolio.
-        wp_register_script( 'visual-portfolio', visual_portfolio()->plugin_url . 'assets/js/script.min.js', $vp_deps, '1.11.0', true );
-        wp_register_style( 'visual-portfolio', visual_portfolio()->plugin_url . 'assets/css/style.min.css', $vp_style_deps, '1.11.0' );
-        wp_register_style( 'visual-portfolio-noscript', visual_portfolio()->plugin_url . 'assets/css/noscript.min.css', $vp_style_deps, '1.11.0' );
+        wp_register_script( 'visual-portfolio', visual_portfolio()->plugin_url . 'assets/js/script.min.js', $vp_deps, '1.12.1', true );
+        wp_register_style( 'visual-portfolio', visual_portfolio()->plugin_url . 'assets/css/style.min.css', $vp_style_deps, '1.12.1' );
+        wp_register_style( 'visual-portfolio-noscript', visual_portfolio()->plugin_url . 'assets/css/noscript.min.css', $vp_style_deps, '1.12.1' );
 
         // Visual Portfolio data.
         $data_init = array(
@@ -351,15 +351,12 @@ class Visual_Portfolio {
     }
 
     /**
-     * Include template style
+     * Find css template file
      *
-     * @param string           $handle style handle name.
-     * @param string           $template_name file name.
-     * @param array            $deps dependencies array.
-     * @param string|bool|null $ver version string.
-     * @param string           $media media string.
+     * @param string $template_name file name.
+     * @return string
      */
-    public function include_template_style( $handle, $template_name, $deps = array(), $ver = false, $media = 'all' ) {
+    public function find_template_styles( $template_name ) {
         $template = '';
 
         if ( file_exists( get_stylesheet_directory() . '/visual-portfolio/' . $template_name . '.css' ) ) {
@@ -371,6 +368,26 @@ class Visual_Portfolio {
         } else if ( file_exists( $this->plugin_path . 'templates/' . $template_name . '.css' ) ) {
             // Default file in plugin folder.
             $template = $this->plugin_url . 'templates/' . $template_name . '.css';
+        }
+
+        return $template;
+    }
+
+    /**
+     * Include template style
+     *
+     * @param string           $handle style handle name.
+     * @param string           $template_name file name.
+     * @param array            $deps dependencies array.
+     * @param string|bool|null $ver version string.
+     * @param string           $media media string.
+     */
+    public function include_template_style( $handle, $template_name, $deps = array(), $ver = false, $media = 'all' ) {
+        $template = $this->find_template_styles( $template_name );
+
+        // maybe find minified style.
+        if ( ! $template ) {
+            $template = $this->find_template_styles( $template_name . '.min' );
         }
 
         // Allow 3rd party plugin filter template file from their plugin.
@@ -391,6 +408,13 @@ class Visual_Portfolio {
      * @return array|bool|false|object
      */
     public function get_oembed_data( $url, $width = null, $height = null ) {
+        $cache_name = 'vp_oembed_data_' . $url . ( $width ? : '' ) . ( $height ? : '' );
+        $cached = get_transient( $cache_name );
+
+        if ( $cached ) {
+            return $cached;
+        }
+
         if ( function_exists( '_wp_oembed_get_object' ) ) {
             require_once( ABSPATH . WPINC . '/class-oembed.php' );
         }
@@ -423,8 +447,13 @@ class Visual_Portfolio {
             if ( ! isset( $data['provider'] ) ) {
                 $data['provider'] = $provider;
             }
+
             // Convert url to hostname, eg: "youtube" instead of "https://youtube.com/".
             $data['provider-name'] = pathinfo( str_replace( array( 'www.' ), '', parse_url( $url, PHP_URL_HOST ) ), PATHINFO_FILENAME );
+
+            // save cache.
+            set_transient( $cache_name, $data, DAY_IN_SECONDS );
+
             return $data;
         }
 
