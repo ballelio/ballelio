@@ -1066,6 +1066,8 @@ div.entry-content a {
     margin-right: -1em;
 }
 
+
+
 @media screen and (min-width: 576px){
     
     div#primary.content-area{
@@ -1353,8 +1355,52 @@ Contact-Page
     #post-1820 p{
         width: 65%;
     }    
-
 }
+    /*------------------------------------------*/
+/**404**/
+/*-----------------------------------------*/
+
+div.panther{
+    background: url("img/pinkpanther.png")  no-repeat center center / contain;
+    margin-right: 0;
+    padding: 7em;
+    margin-bottom: 2em;
+}
+
+article.error {   
+   margin-bottom: 4em;
+}
+
+.error h3{
+    margin-top: 0;
+}
+
+.error a{
+    font-weight: 700;
+    color:#000000;
+     border-bottom: 2px solid #dd4f4f;
+}
+
+@media screen and (min-width: 576px){
+article.error{
+     float: left;
+    font-weight: 400;
+    font-size: 1.25em;
+}
+
+div.panther{
+    background: url("img/pinkpanther.png")  no-repeat left center / contain;
+    float: left;
+    margin-right: 2em;  
+    }
+}
+
+@media screen and (min-width: 1280px){
+    article.error {   
+   margin-bottom: 8em;
+}
+}
+
 
 
 /*--------------------------------------------------------------
